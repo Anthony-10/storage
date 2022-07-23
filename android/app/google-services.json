@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "31125282457",
+    "project_id": "storeg-db4ee",
+    "storage_bucket": "storeg-db4ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:31125282457:android:be799e7b5498eec84a6208",
+        "android_client_info": {
+          "package_name": "com.example.storage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "31125282457-0lh8u8i1mqad46v15j2fe83ca0k1qed4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFx4LMCBvpcmqo5hiqlnyEExNrhcW_EOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "31125282457-0lh8u8i1mqad46v15j2fe83ca0k1qed4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
