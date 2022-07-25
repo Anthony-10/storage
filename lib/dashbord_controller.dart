@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+import 'image/image_display/image_display.dart';
 
 class DashBordController extends GetxController {
   final image = [].obs;
@@ -21,7 +25,7 @@ class DashBordController extends GetxController {
     ),
   );
 
-  Future<void> getImageGallery(ImageSource imageSource) async {
+  Future<void> getImageGallery() async {
     image.clear();
     final FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.image,
@@ -59,7 +63,7 @@ class DashBordController extends GetxController {
     }
   }
 
-  Future<void> userImage({required String platform}) async {
+  Future<void> userImage({required String platform, required var place}) async {
     fileURLList.clear();
     print(
         '????????????????????????????????userImage>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
@@ -67,7 +71,7 @@ class DashBordController extends GetxController {
         "$image, $videos,GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
     try {
       if (image.isNotEmpty || videos.isNotEmpty) {
-        image.forEach((file) async {
+        for (var file in place) {
           final ref = firebase_storage.FirebaseStorage.instance
               .ref()
               .child("$platform/${DateTime.now().toString()}");
@@ -75,9 +79,14 @@ class DashBordController extends GetxController {
           fileURL = await result.ref.getDownloadURL();
 
           fileURLList.add(fileURL);
-          image.clear();
+          /*image.clear();*/
           print('$fileURLList>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.');
-        });
+        }
+        image.clear();
+        print('$fileURLList>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>pppppppp');
+        for (var element in fileURLList) {
+          userProducts(url: element, collections: platform);
+        }
       } else {
         print('sddddddddddddddddddddddddddddddddddddddddddddddddddd');
       }
@@ -92,14 +101,13 @@ class DashBordController extends GetxController {
     }
   }
 
-  Future<void> userProducts({
-    var url,
-  }) async {
+  Future<void> userProducts(
+      {required var url, required var collections}) async {
     print('$url>>>>>>>>>>>>>>>>>>>>>>>>>>>>jjj');
     try {
-      await _fireStore.collection("Images").doc().set({
+      await _fireStore.collection(collections).add({
         'Url': url,
-      });
+      }).whenComplete(() => Get.to(() => const ImageDisplay()));
     } on FirebaseException catch (e) {
       Get.snackbar(
         "Error Adding User Info",
@@ -109,5 +117,70 @@ class DashBordController extends GetxController {
     } catch (e) {
       rethrow;
     }
+  }
+
+  buildExpanded({required String collections}) {
+    return Expanded(
+      child: StreamBuilder<QuerySnapshot>(
+          stream:
+              FirebaseFirestore.instance.collection(collections).snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: const Text("Check your connection"),
+                );
+              } else {
+                if (snapshot.hasData) {
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 0.65),
+                    primary: false,
+                    padding: const EdgeInsets.all(15),
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: snapshot.data?.size,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: Get.height * 0.28,
+                            width: Get.width * 0.5,
+                            child: Card(
+                              child: CachedNetworkImage(
+                                cacheManager: customCacheManager,
+                                imageUrl: snapshot.data!.docs[index]['Url']
+                                    .toString(),
+                                fit: BoxFit.fill,
+                                placeholder: (context, url) => Container(
+                                  color: Colors.black12,
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.black12,
+                                  child: const Icon(Icons.error,
+                                      color: Colors.red),
+                                ),
+                              ),
+                              semanticContainer: true,
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              }
+              return const Text("Loding...");
+            } else {
+              return const Text("Loding...");
+            }
+          }),
+    );
   }
 }

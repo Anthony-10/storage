@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import '../image/image_display/image_display.dart';
 import '../upload_screen.dart';
 
 class LoginController extends GetxController {
@@ -10,7 +11,7 @@ class LoginController extends GetxController {
       await _auth
           .signInWithEmailAndPassword(
               email: email.trim(), password: password.trim())
-          .then((value) => Get.off(() => UploadScreen()));
+          .then((value) => Get.off(() => const ImageDisplay()));
     } on FirebaseAuthException catch (e) {
       Get.snackbar("Error login account", e.message.toString(),
           snackPosition: SnackPosition.BOTTOM);
