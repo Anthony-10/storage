@@ -20,8 +20,40 @@ class ImageDisplay extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
-        child: ListView(
+          padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+          child: GridView.count(
+            primary: false,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: 2,
+            children: [
+              GestureDetector(
+                onTap: () => Get.to(() => Tech()),
+                child: Container(
+                  color: Colors.grey,
+                  child: const Center(
+                    child: Text(
+                      "Tech",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Get.to(() => Meme()),
+                child: Container(
+                  color: Colors.grey,
+                  child: const Center(
+                    child: Text(
+                      "Memes",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+          /*ListView(
           children: [
             ListTile(
               title: const Text(
@@ -51,8 +83,8 @@ class ImageDisplay extends StatelessWidget {
               },
             )
           ],
-        ),
-      ),
+        ),*/
+          ),
     );
   }
 }

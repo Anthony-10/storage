@@ -10,25 +10,15 @@ class Tech extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        top: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                child: Padding(
-              padding:
-                  EdgeInsets.only(top: Get.height * .06, left: Get.width * .09),
-              child: const Text(
-                'Tech',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-              ),
-            )),
-            dashBordController.buildExpanded(collections: 'Tech'),
-          ],
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            'Tech',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
         ),
       ),
+      body: dashBordController.buildExpanded(collections: 'Tech'),
     );
   }
 }

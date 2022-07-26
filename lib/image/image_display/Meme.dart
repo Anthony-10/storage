@@ -10,25 +10,15 @@ class Meme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        top: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                child: Padding(
-              padding:
-                  EdgeInsets.only(top: Get.height * .06, left: Get.width * .09),
-              child: const Text(
-                'Meme',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-              ),
-            )),
-            dashBordController.buildExpanded(collections: 'Meme'),
-          ],
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            'Meme',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
         ),
       ),
+      body: dashBordController.buildExpanded(collections: 'Meme'),
     );
   }
 }
